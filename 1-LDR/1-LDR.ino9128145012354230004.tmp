@@ -1,0 +1,74 @@
+int sensorValue = 0;
+int sensorValue1 = 0;
+int counter = 0;
+const int buzzer = 9; 
+void setup()
+{
+  pinMode(A0, INPUT);
+  pinMode(6, OUTPUT);
+  pinMode(A1, INPUT);
+  pinMode(11, OUTPUT);
+  pinMode(buzzer, OUTPUT); // Set buzzer - pin 9 as an output
+  Serial.begin(9600);
+}
+
+void loop()
+{
+  // read the value from the sensor
+  sensorValue = analogRead(A0);
+  sensorValue1 = analogRead(A1);
+  // print the sensor reading so you know its range
+  Serial.print("Sensor Value: ");
+  Serial.println(sensorValue);
+  Serial.print("Sensor Value1: ");
+  Serial.println(sensorValue1);
+  Serial.print("Counter: ");
+  Serial.println(counter);
+ 
+   // map the sensor reading to a range for the LED
+  analogWrite(11, map(sensorValue, 0, 1023, 0, 255));
+  delay(1000); // Wait for 100 millisecond(s)
+  analogWrite(6, map(sensorValue1, 0, 1023, 0, 255));
+  delay(1500);
+
+  if(sensorValue > 0 && sensorValue <= 20)
+  {
+    counter++;
+  }
+  if(sensorValue1 >0 && sensorValue1 <=80)
+  {
+    counter--;
+  }
+  
+  delay(1500);
+
+
+ 
+
+if(counter>5)
+{
+ Serial.print("Alarm is on");
+ Serial.print("The room is full");
+ tone(buzzer, 1000); // Send 1KHz sound signal...
+  delay(1000);
+  noTone(buzzer);     // Stop sound...
+  delay(1500);        // ...for 1 sec 
+  exit(1);
+         
+}
+else
+{
+  noTone(buzzer);     // Stop sound...
+  
+}
+if(counter<0)
+{
+  Serial.print("The room is empty");
+  counter = 0;
+}
+
+
+  
+  
+  
+}
